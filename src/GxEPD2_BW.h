@@ -12,23 +12,8 @@
 #ifndef _GxEPD2_BW_H_
 #define _GxEPD2_BW_H_
 
-#include <Adafruit_GFX.h>
-#include "GxEPD2_EPD.h"
-#include "epd/GxEPD2_154.h"
-#include "epd/GxEPD2_213.h"
-#include "epd/GxEPD2_213_B72.h"
-#include "epd/GxEPD2_213_B73.h"
-#include "epd/GxEPD2_213_flex.h"
-#include "epd/GxEPD2_260.h"
-#include "epd/GxEPD2_290.h"
-#include "epd/GxEPD2_290_T5.h"
-#include "epd/GxEPD2_270.h"
-#include "epd/GxEPD2_371.h"
-#include "epd/GxEPD2_420.h"
-#include "epd/GxEPD2_583.h"
-#include "epd/GxEPD2_750.h"
-#include "epd/GxEPD2_750_T7.h"
-#include "it8951/GxEPD2_it60.h"
+// uncomment next line to use class GFX of library GFX_Root instead of Adafruit_GFX
+//#include <GFX.h>
 
 #ifndef ENABLE_GxEPD2_GFX
 // default is off
@@ -37,26 +22,73 @@
 
 #if ENABLE_GxEPD2_GFX
 #include "GxEPD2_GFX.h"
+#define GxEPD2_GFX_BASE_CLASS GxEPD2_GFX
+#elif defined(_GFX_H_)
+#define GxEPD2_GFX_BASE_CLASS GFX
+#else
+#include <Adafruit_GFX.h>
+#define GxEPD2_GFX_BASE_CLASS Adafruit_GFX
 #endif
 
+#include "GxEPD2_EPD.h"
+#include "epd/GxEPD2_102.h"
+#include "epd/GxEPD2_150_BN.h"
+#include "epd/GxEPD2_154.h"
+#include "epd/GxEPD2_154_D67.h"
+#include "epd/GxEPD2_154_T8.h"
+#include "epd/GxEPD2_154_M09.h"
+#include "epd/GxEPD2_154_M10.h"
+#include "epd/GxEPD2_213.h"
+#include "epd/GxEPD2_213_B72.h"
+#include "epd/GxEPD2_213_B73.h"
+#include "epd/GxEPD2_213_B74.h"
+#include "epd/GxEPD2_213_flex.h"
+#include "epd/GxEPD2_213_M21.h"
+#include "epd/GxEPD2_213_T5D.h"
+#include "epd/GxEPD2_213_BN.h"
+#include "epd/GxEPD2_260.h"
+#include "epd/GxEPD2_266_BN.h"
+#include "epd/GxEPD2_260_M01.h"
+#include "epd/GxEPD2_290.h"
+#include "epd/GxEPD2_290_T5.h"
+#include "epd/GxEPD2_290_T5D.h"
+#include "epd/GxEPD2_290_I6FD.h"
+#include "epd/GxEPD2_290_M06.h"
+#include "epd/GxEPD2_290_T94.h"
+#include "epd/GxEPD2_290_T94_V2.h"
+#include "epd/GxEPD2_290_BS.h"
+#include "epd/GxEPD2_270.h"
+#include "epd/GxEPD2_270_T91.h"
+#include "epd/GxEPD2_371.h"
+#include "epd/GxEPD2_370_TC1.h"
+#include "epd/GxEPD2_420.h"
+#include "epd/GxEPD2_420_M01.h"
+#include "epd/GxEPD2_583.h"
+#include "epd/GxEPD2_583_T8.h"
+#include "epd/GxEPD2_750.h"
+#include "epd/GxEPD2_750_T7.h"
+#include "epd/GxEPD2_1160_T91.h"
+#include "epd/GxEPD2_1248.h"
+#include "it8951/GxEPD2_it60.h"
+#include "it8951/GxEPD2_it60_1448x1072.h"
+#include "it8951/GxEPD2_it78_1872x1404.h"
+#include "it8951/GxEPD2_it103_1872x1404.h"
+
 template<typename GxEPD2_Type, const uint16_t page_height>
-#if ENABLE_GxEPD2_GFX
-class GxEPD2_BW : public GxEPD2_GFX
-#else
-class GxEPD2_BW : public Adafruit_GFX
-#endif
+class GxEPD2_BW : public GxEPD2_GFX_BASE_CLASS
 {
   public:
     GxEPD2_Type epd2;
 #if ENABLE_GxEPD2_GFX
-    GxEPD2_BW(GxEPD2_Type epd2_instance) : epd2(epd2_instance), GxEPD2_GFX(epd2, GxEPD2_Type::WIDTH, GxEPD2_Type::HEIGHT)
+    GxEPD2_BW(GxEPD2_Type epd2_instance) : GxEPD2_GFX_BASE_CLASS(epd2, GxEPD2_Type::WIDTH, GxEPD2_Type::HEIGHT), epd2(epd2_instance)
 #else
-    GxEPD2_BW(GxEPD2_Type epd2_instance) : Adafruit_GFX(GxEPD2_Type::WIDTH, GxEPD2_Type::HEIGHT), epd2(epd2_instance)
+    GxEPD2_BW(GxEPD2_Type epd2_instance) : GxEPD2_GFX_BASE_CLASS(GxEPD2_Type::WIDTH, GxEPD2_Type::HEIGHT), epd2(epd2_instance)
 #endif
     {
       _page_height = page_height;
       _pages = (HEIGHT / _page_height) + ((HEIGHT % _page_height) > 0);
       _reverse = (epd2_instance.panel == GxEPD2::GDE0213B1);
+      _mirror = false;
       _using_partial_mode = false;
       _current_page = 0;
       setFullWindow();
@@ -102,12 +134,12 @@ class GxEPD2_BW : public Adafruit_GFX
       x -= _pw_x;
       y -= _pw_y;
       // clip to (partial) window
-      if ((x < 0) || (x >= _pw_w) || (y < 0) || (y >= _pw_h)) return;
+      if ((x < 0) || (x >= int16_t(_pw_w)) || (y < 0) || (y >= int16_t(_pw_h))) return;
       // adjust for current page
       y -= _current_page * _page_height;
       if (_reverse) y = _page_height - y - 1;
       // check if in current page
-      if ((y < 0) || (y >= _page_height)) return;
+      if ((y < 0) || (y >= int16_t(_page_height))) return;
       uint16_t i = x / 8 + y * (_pw_w / 8);
       if (color)
         _buffer[i] = (_buffer[i] | (1 << (7 - x % 8)));
@@ -127,10 +159,23 @@ class GxEPD2_BW : public Adafruit_GFX
     // initial false for re-init after processor deep sleep wake up, if display power supply was kept
     // this can be used to avoid the repeated initial full refresh on displays with fast partial update
     // NOTE: garbage will result on fast partial update displays, if initial full update is omitted after power loss
+    // reset_duration = 10 is default; a value of 2 may help with "clever" reset circuit of newer boards from Waveshare 
     // pulldown_rst_mode true for alternate RST handling to avoid feeding 5V through RST pin
-    void init(uint32_t serial_diag_bitrate, bool initial, bool pulldown_rst_mode = false)
+    void init(uint32_t serial_diag_bitrate, bool initial, uint16_t reset_duration = 10, bool pulldown_rst_mode = false)
     {
-      epd2.init(serial_diag_bitrate, initial, pulldown_rst_mode);
+      epd2.init(serial_diag_bitrate, initial, reset_duration, pulldown_rst_mode);
+      _using_partial_mode = false;
+      _current_page = 0;
+      setFullWindow();
+    }
+
+    // init method with additional parameters:
+    // SPIClass& spi: either SPI or alternate HW SPI channel
+    // SPISettings spi_settings: e.g. for higher SPI speed selection
+    void init(uint32_t serial_diag_bitrate, bool initial, uint16_t reset_duration, bool pulldown_rst_mode, SPIClass& spi, SPISettings spi_settings)
+    {
+      epd2.selectSPI(spi, spi_settings);
+      epd2.init(serial_diag_bitrate, initial, reset_duration, pulldown_rst_mode);
       _using_partial_mode = false;
       _current_page = 0;
       setFullWindow();
@@ -148,7 +193,8 @@ class GxEPD2_BW : public Adafruit_GFX
     // display buffer content to screen, useful for full screen buffer
     void display(bool partial_update_mode = false)
     {
-      epd2.writeImage(_buffer, 0, 0, WIDTH, _page_height);
+      if (partial_update_mode) epd2.writeImage(_buffer, 0, 0, WIDTH, _page_height);
+      else epd2.writeImageForFullRefresh(_buffer, 0, 0, WIDTH, _page_height);
       epd2.refresh(partial_update_mode);
       if (epd2.hasFastPartialUpdate)
       {
@@ -231,7 +277,7 @@ class GxEPD2_BW : public Adafruit_GFX
         }
         else // full update
         {
-          epd2.writeImage(_buffer, 0, 0, WIDTH, HEIGHT);
+          epd2.writeImageForFullRefresh(_buffer, 0, 0, WIDTH, HEIGHT);
           epd2.refresh(false);
           if (epd2.hasFastPartialUpdate)
           {
@@ -247,7 +293,7 @@ class GxEPD2_BW : public Adafruit_GFX
       {
         //Serial.print("  nextPage("); Serial.print(_pw_x); Serial.print(", "); Serial.print(_pw_y); Serial.print(", ");
         //Serial.print(_pw_w); Serial.print(", "); Serial.print(_pw_h); Serial.print(") P"); Serial.println(_current_page);
-        uint16_t page_ye = _current_page < (_pages - 1) ? page_ys + _page_height : HEIGHT;
+        uint16_t page_ye = _current_page < int16_t(_pages - 1) ? page_ys + _page_height : HEIGHT;
         uint16_t dest_ys = _pw_y + page_ys; // transposed
         uint16_t dest_ye = gx_uint16_min(_pw_y + _pw_h, _pw_y + page_ye);
         if (dest_ye > dest_ys)
@@ -265,7 +311,7 @@ class GxEPD2_BW : public Adafruit_GFX
           //Serial.print(dest_ys); Serial.print(".."); Serial.println(dest_ye);
         }
         _current_page++;
-        if (_current_page == _pages)
+        if (_current_page == int16_t(_pages))
         {
           _current_page = 0;
           if (!_second_phase)
@@ -285,10 +331,10 @@ class GxEPD2_BW : public Adafruit_GFX
       }
       else // full update
       {
-        if (!_second_phase) epd2.writeImage(_buffer, 0, page_ys, WIDTH, gx_uint16_min(_page_height, HEIGHT - page_ys));
+        if (!_second_phase) epd2.writeImageForFullRefresh(_buffer, 0, page_ys, WIDTH, gx_uint16_min(_page_height, HEIGHT - page_ys));
         else epd2.writeImageAgain(_buffer, 0, page_ys, WIDTH, gx_uint16_min(_page_height, HEIGHT - page_ys));
         _current_page++;
-        if (_current_page == _pages)
+        if (_current_page == int16_t(_pages))
         {
           _current_page = 0;
           if (epd2.hasFastPartialUpdate)
@@ -330,7 +376,7 @@ class GxEPD2_BW : public Adafruit_GFX
         }
         else // full update
         {
-          epd2.writeImage(_buffer, 0, 0, WIDTH, HEIGHT);
+          epd2.writeImageForFullRefresh(_buffer, 0, 0, WIDTH, HEIGHT);
           epd2.refresh(false);
           if (epd2.hasFastPartialUpdate)
           {
@@ -372,7 +418,7 @@ class GxEPD2_BW : public Adafruit_GFX
           uint16_t page_ys = _current_page * _page_height;
           fillScreen(GxEPD_WHITE);
           drawCallback(pv);
-          epd2.writeImage(_buffer, 0, page_ys, WIDTH, gx_uint16_min(_page_height, HEIGHT - page_ys));
+          epd2.writeImageForFullRefresh(_buffer, 0, page_ys, WIDTH, gx_uint16_min(_page_height, HEIGHT - page_ys));
         }
         epd2.refresh(false); // full update after first phase
         if (epd2.hasFastPartialUpdate)
@@ -496,6 +542,7 @@ class GxEPD2_BW : public Adafruit_GFX
     void refresh(bool partial_update_mode = false) // screen refresh from controller memory to full screen
     {
       epd2.refresh(partial_update_mode);
+      if (!partial_update_mode) epd2.powerOff();
     }
     void refresh(int16_t x, int16_t y, int16_t w, int16_t h) // screen refresh from controller memory, partial screen
     {
